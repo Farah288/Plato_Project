@@ -1,4 +1,6 @@
 from plato.algorithms import fedavg
+# Import the base Server class
+from plato.servers import fedavg as fedavg_server
 
 class DRFedAvg(fedavg.Algorithm):
     """
@@ -48,3 +50,16 @@ class DRFedAvg(fedavg.Algorithm):
         aggregated_results['precision_macro'] = precision_sum
         
         return aggregated_results, total_samples
+
+class Server(fedavg_server.Server):
+    """
+    This class is the 'Server Wrapper'. It inherits the standard FedAvg Server 
+    structure to satisfy the Plato Registry (it accepts model, algorithm, etc.).
+    It uses your DRFedAvg class for its aggregation logic.
+    """
+    def __init__(self, model=None, algorithm=None, trainer=None):
+        # 1. Create an instance of your custom Algorithm class
+        custom_algorithm_instance = DRFedAvg(trainer=trainer)
+        
+        # 2. Pass your custom algorithm instance up to the base Server's __init__
+        super().__init__(model=model, algorithm=custom_algorithm_instance, trainer=trainer)

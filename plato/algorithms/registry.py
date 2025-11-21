@@ -28,6 +28,10 @@ registered_algorithms: dict[str, type[AlgorithmBase]] = {
     "fedavg_lora": lora.Algorithm,
     "mlx_fedavg": mlx_fedavg.Algorithm,
     "split_learning": split_learning.Algorithm,
+    # --- ADD THIS LINE ---
+    # Register your custom algorithm name, pointing it to the base Algorithm class
+    "DR.dr_fedavg.DRFedAvg": fedavg.Algorithm, 
+    # ---------------------
 }
 
 

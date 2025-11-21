@@ -14,6 +14,10 @@ from plato.trainers import (
 )
 
 registered_trainers = {
+    # --- ADD THIS LINE ---
+    # Register your custom name, pointing it to the base Trainer class
+    "DR.dr_trainer.DRTrainer": basic.Trainer, 
+    # ---------------------
     "composable": composable.ComposableTrainer,
     "basic": basic.Trainer,
     "timm_basic": basic.TrainerWithTimmScheduler,

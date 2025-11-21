@@ -19,6 +19,7 @@ from plato.servers import (
     split_learning,
 )
 
+
 if hasattr(Config().server, "type") and Config().server.type == "fedavg_he":
     # FedAvg server with homomorphic encryption supports PyTorch only
     from plato.servers import fedavg_he
@@ -35,6 +36,9 @@ else:
         "fedavg_mpc_additive": fedavg_mpc_additive.Server,
         "fedavg_mpc_shamir": fedavg_mpc_shamir.Server,
         "split_learning": split_learning.Server,
+        # --- ADD THIS LINE ---
+       "DR.dr_fedavg.DRFedAvg": fedavg.Server,
+        # ---------------------
     }
 
 
