@@ -1,0 +1,104 @@
+[clients]
+
+# Type: simple_he enables the Homomorphic Encryption features required by MaskCrypt
+type = "simple_he"
+
+# The total number of clients
+total_clients = 10
+
+# Encryption ratio for MaskCrypt (e.g., fraction of parameters to encrypt)
+encrypt_ratio = 0.1
+random_mask = false
+
+# The number of clients selected in each round
+per_round = 3
+
+# Should the clients compute test accuracy locally?
+do_test = true # Enabled for result verification, matching standard practice
+
+# Whether client-server communication should be simulated with files
+comm_simulation = true
+
+[server]
+address = "127.0.0.1"
+port = 8001
+random_seed = 1 # Server-side seed
+simulate_wall_time = true # Retained from template, useful for timing HE operations
+
+[data]
+
+# The training and testing dataset
+datasource = "DRDataSource" # Required for custom image datasets like DR
+dataset_name = "DR" # Dataset identifier
+download = false # Assuming custom DR dataset is locally available
+num_classes = 5
+
+# --- Custom Data Source Parameters ---
+# IMPORTANT: Replace this with your local path to the DR data directory
+full_data_path = "/path/to/your/dr_dataset_root/"
+
+# Name of the CSV file containing image IDs and diagnosis
+labels_filename = "trainLabels.csv" 
+
+# Subdirectory containing all the actual .png images
+train_dir = "colored_images"
+test_dir = "colored_images" # Uses the same image folder for the global test set
+
+# Ratio of the full data to hold out for the global test set (server evaluation)
+test_ratio = 0.20
+
+random_seeds = [1, 2, 3]
+
+# Full data path: You must replace this with your local path to the DR data directory
+# full_data_path = "/path/to/your/dr_dataset_root/"
+
+# Number of samples in each partition (Total dataset size)
+partition_size = 15000
+
+# IID or non-IID?
+sampler = "iid"
+
+[trainer]
+type = "DR.dr_trainer.DRTrainer"
+
+# The maximum number of training rounds
+rounds = 25
+
+# The maximum number of clients running concurrently
+max_concurrency = 5
+
+# The target accuracy
+target_accuracy = 0.85 # Increased target to match FedAvg config
+
+# The machine learning model
+model_name = "resnet_18"
+
+# Number of epoches for local training in each communication round
+epochs = 5
+batch_size = 32
+optimizer = "SGD"
+
+[algorithm]
+
+# Aggregation algorithm is set to a MaskCrypt-enabled variant
+type = "DR.dr_fedavg.DRFedAvg"
+#"fedavg"
+
+[results]
+# Write the following parameter(s) into a CSV
+#types = "round, elapsed_time, accuracy, comm_overhead, comm_time, processing_time, round_time, comm_overhead, local_epoch_num, edge_agg_num"
+include_fields = ["round", "elapsed_time", "accuracy", "loss", "f1_macro", "recall_macro", "precision_macro", "comm_overhead", "round_time", "local_epoch_num", "edge_agg_num"]
+
+[parameters]
+
+[parameters.model]
+num_classes = 5 # Adjusted for common DR classification (e.g., 5-grade severity)
+
+[parameters.optimizer]
+lr = 0.01
+momentum = 0.9
+weight_decay = 0.0
+
+#[system] 
+# Global random seeds for running the entire experiment multiple times for reproducibility
+#random_seeds = [1, 2, 3]

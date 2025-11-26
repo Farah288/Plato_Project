@@ -1,0 +1,90 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "plato-learn"
+version = "1.41"
+description = "Plato: a research framework for federated learning"
+readme = "README.md"
+requires-python = ">=3.13"
+license = "Apache-2.0"
+
+dependencies = [
+    "aiohttp",
+    "accelerate",
+    "boto3",
+    "datasets",
+    "evaluate",
+    "gymnasium",
+    "kazoo",
+    "lightly",
+    "numpy",
+    "opacus",
+    "python-socketio",
+    "requests",
+    "tenseal",
+    "timm",
+    "torch",
+    "torch-optimizer",
+    "torchvision",
+    "transformers",
+    "peft",
+    "zstd",
+    "munch",
+    "scikit-learn",
+    "pandas",
+]
+
+[project.urls]
+Homepage = "https://github.com/TL-System/plato"
+Repository = "https://github.com/TL-System/plato"
+Documentation = "https://platodocs.netlify.app/"
+
+# Basic tool configuration
+[tool.ruff]
+exclude = [
+    ".venv",
+    "plato/models/dvit",
+    "plato/models/t2tvit",
+]
+include = [
+    "pyproject.toml",
+    "plato/**/*.py",
+    "tests/**/*.py",
+    "examples/**/*.py",
+]
+line-length = 88
+lint.select = ["I"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["plato"]
+
+[tool.uv.workspace]
+members = [
+    "examples/unlearning/fedunlearning",
+    "examples/unlearning/knot",
+    "examples/client_selection/pisces",
+    "examples/client_selection/polaris",
+    "examples/split_learning/llm_split_learning",
+    "examples/ssl/calibre",
+    "examples/ssl/smog",
+    "examples/model_search/anycostfl",
+    "examples/model_search/fedrolex",
+    "examples/model_search/pfedrlnas/VIT",
+    "examples/model_search/pfedrlnas/MobileNetV3",
+    "examples/model_search/heterofl",
+    "examples/detector",
+    "examples/gradient_leakage_attacks",
+    "tools",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+]
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: marks tests that require end-to-end config smoke runs.",
+]
